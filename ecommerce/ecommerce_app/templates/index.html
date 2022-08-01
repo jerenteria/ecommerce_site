@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td>Product 1</td>
+            <td>$5.99</td>
+            <td>
+                <form action="/purchase/{{product.id}}" method="POST">
+                    {% csrf_token %}
+                    <select name="quantity">
+                        {% for num in quantity %}
+                        <option value="{{quantity}}">{{quantity}}</option>
+                        {% endfor %}
+                </select>
+                <input type="submit" value="buy now!">
+                </form>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
