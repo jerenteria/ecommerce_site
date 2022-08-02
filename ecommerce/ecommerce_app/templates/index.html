@@ -7,27 +7,30 @@
 </head>
 <body>
     <h1>Hello World!</h1>
+
     <table>
         <tr>
             <th>Item</th>
             <th>Price</th>
             <th>Action</th>
         </tr>
+        {% for product in all_products %}
         <tr>
-            <td>Product 1</td>
-            <td>$5.99</td>
+            <td>{{product.name}}</td>
+            <td>{{product.price}}.99</td>
             <td>
                 <form action="/purchase/{{product.id}}" method="POST">
                     {% csrf_token %}
                     <select name="quantity">
                         {% for num in quantity %}
-                        <option value="{{quantity}}">{{quantity}}</option>
+                        <option value="{{num}}">{{num}}</option>
                         {% endfor %}
                 </select>
                 <input type="submit" value="buy now!">
                 </form>
             </td>
         </tr>
+        {% endfor %}
     </table>
 </body>
 </html>
