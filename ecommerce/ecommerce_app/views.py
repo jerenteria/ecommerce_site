@@ -22,7 +22,7 @@ def process_purchase(request, product_id):
         product = Product.objects.get(id=product_id)
         new_order = Order.objects.create(quantity=int(request.POST['quantity']), total_charge=int(request.POST['quantity']*product.price))
         new_order.items_ordered.add(product)
-        return render (request, "cart.html")
+        return redirect (request, "cart.html")
     return redirect("/")
 
 
