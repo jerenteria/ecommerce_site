@@ -10,12 +10,12 @@ def index(request):
     }
     return render(request, "index.html", context)
 
-# def cart(request):
-#     items = []
-#     context = {
-
-#     }
-#     return render(request, "cart.html", context)
+def cart(request):
+    items = []
+    context = {
+        
+    }
+    return render(request, "cart.html", context)
 
 def process_purchase(request, product_id):
     if(request.method == 'POST'):
