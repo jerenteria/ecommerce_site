@@ -1,46 +1,61 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
+from django.shortcuts import reverse
 
-# Create your models here.
+CATEGORY_CHOICES = (
+    ('S', 'Shirt'),
+    ('SW', 'Sweater')
+)
 
-class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+LABEL_CHOICES = (
+    ('S', 'primary'),
+    ('SW', 'secondary')
+)
+
+class Item(models.Model):
+    title = models.CharField(max_length=255)
+    price = models.FloatField()
+    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    label = models.CharField(choices=LABEL_CHOICES, max_length=2)
+    slug = models.SlugField()
+
+    
+    def __str__(self):
+        return self.title
+
+    # slugs are used to store urls 
+    # since spaced dont work in urls they are stored in slugs to prevent all the spaces
+    # if i wanted to refer to my post with an id=2 then i can refer to it with www.ecommerce.com/2
+    # we would not be able to refer to it like www.ecommerce.com/juans second blog post
+        # all the spaced would be replaced with "%" and it would look ugly
+    # instead it is storing www.ecommerce.com/juans-second-blog-post
+    def get_absolute_url(self):
+        # going to go back to product url
+        return reverse("core:product", kwargs={
+            'slug': self.slug
+        })
+
+    def get_add_to_cart_url(self):
+                # going to go back to product url
+        return reverse("core:add-to-cart", kwargs={
+            'slug': self.slug
+        })
+
+
+class OrderItem(models.Model):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return self.name
-
-class Product(models.Model):
-    name = models.CharField(max_length=255)
-    price = models.IntegerField()
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
+        return self.title
 
 class Order(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
-    quantity = models.IntegerField() 
-    total_charge = models.IntegerField()
-    items_ordered = models.ManyToManyField(Product, related_name="orders")
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
-
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    items = models.ManyToManyField(OrderItem)
+    start_date = models.DateTimeField(auto_now_add=True)
+    ordered_date = models.DateTimeField()
+    ordered = models.BooleanField(default=False)
+    
     def __str__(self):
-        return str(self.id)
-
-    @property
-    def get_total(self):
-        total = self.product.price * self.quantity
-        return total
-
-class ShippingAddress(models.Model):
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, blank=True, null=False)
-    address = models.CharField(max_length=255, null=False)
-    city = models.CharField(max_length=255, null=True)
-    state = models.CharField(max_length=255, null=True)
-    zipcode = models.CharField(max_length=255, null=True)
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.address
+        return self.title

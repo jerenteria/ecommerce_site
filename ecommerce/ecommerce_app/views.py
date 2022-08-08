@@ -1,39 +1,43 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import ListView, DetailView
+from django.utils import timezone
 from .models import *
 
-# Create your views here.
+# renders all items
+# class based view is easier to create reusable components
+class HomeView(ListView):
+    model = Item
+    template_name = "index.html"
 
-def index(request):
-    context = {
-        'all_products': Product.objects.all(),
-        'quantity': [1,2,3,4,5,6,7,8,9,10]
-    }
-    return render(request, "index.html", context)
+# function based view; how i used to render items
+    # def index(request):
+    #     context = {
+    #         'items': Item.objects.all(),
+    #     }
+    #     return render(request, "index.html", context)
 
-def cart(request):
-    items = []
-    context = {
-        
-    }
-    return render(request, "cart.html", context)
+class ItemDetailView(DetailView):
+    model = Item
+    template_name = "product.html"
 
-def process_purchase(request, product_id):
-    if(request.method == 'POST'):
-        product = Product.objects.get(id=product_id)
-        new_order = Order.objects.create(quantity=int(request.POST['quantity']), total_charge=int(request.POST['quantity']*product.price))
-        new_order.items_ordered.add(product)
-        return redirect (request, "cart.html")
-    return redirect("/")
+def add_to_cart(request, slug):
+    item = get_object_or_404(Item, slug=slug) # check to see if user has item or not
+    order_item = OrderItem.objects.create(item=item)
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+    if order_qs.exists():
+        order = order_qs[0]
+        # check if order item is in the order
+        if order.items.filter(items__slug=item.slug).exists():
+            order_item.quantity += 1
+            order_item.save()
+    else:
+        order_date = timezone.now()
+        order = Order.objects.create(user=request.user, ordered_date=ordered_date)
+        order.items.add(order_item)
+    return redirect("core:product", kwargs= {
+        'slug': slug
+    })
 
+def checkout(request):
+    return render(request, "cart.html")
 
-def render_total(request):
-    all_orders = Order.objects.all()
-    total_spent = 0
-    for order in all_orders:
-        total_spent += order.total_charge
-    context = {
-            'last_order': Order.objects.last(),
-            'all_orders': all_orders,
-            'grand_total': total_spent,
-        }
-    return render(request, "cart.html", context)
