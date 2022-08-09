@@ -10,7 +10,7 @@
     <h2>Here is the items</h2>
 
     {% for item in object_list %}
-    <h3>{{ item.get_category_display }}</h3>
+    <h3><a href="/{{item.id}}/product">Individual item</a></h3>
         {{ item.title }}
         {{ item.price }}
         <a href="{{ object.get_add_to_cart_url }}" class="btn btn-primary">Add to cart</a>

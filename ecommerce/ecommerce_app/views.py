@@ -16,28 +16,35 @@ class HomeView(ListView):
     #     }
     #     return render(request, "index.html", context)
 
-class ItemDetailView(DetailView):
-    model = Item
-    template_name = "product.html"
+# class ItemDetailView(DetailView):
+#     model = Item
+#     template_name = "product.html"
 
-def add_to_cart(request, slug):
-    item = get_object_or_404(Item, slug=slug) # check to see if user has item or not
+
+
+
+def add_to_cart(request):
+    item = get_object_or_404(Item) #slug=slug) # check to see if user has item or not
     order_item = OrderItem.objects.create(item=item)
     order_qs = Order.objects.filter(user=request.user, ordered=False)
     if order_qs.exists():
         order = order_qs[0]
         # check if order item is in the order
-        if order.items.filter(items__slug=item.slug).exists():
+        if order.items.filter(item__id=item.id).exists():
             order_item.quantity += 1
             order_item.save()
     else:
         order_date = timezone.now()
         order = Order.objects.create(user=request.user, ordered_date=ordered_date)
         order.items.add(order_item)
-    return redirect("core:product", kwargs= {
-        'slug': slug
-    })
+    return redirect('/index')
 
 def checkout(request):
     return render(request, "cart.html")
 
+def one_item(request, item_id):
+    one_item = Item.objects.get(id=item_id)
+    context = {
+        'item': one_item
+    }
+    return render(request, 'product.html', context)
