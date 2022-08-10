@@ -9,11 +9,11 @@
 <body>
     <h2>Here is the items</h2>
 
-    {% for item in object_list %}
-    <h3><a href="/{{item.id}}/product">Individual item</a></h3>
-        {{ item.title }}
-        {{ item.price }}
-        <a href="{{ object.get_add_to_cart_url }}" class="btn btn-primary">Add to cart</a>
+    {% for product in all_products %}
+    <h3><a href="/{{product.id}}/product">Individual item</a></h3>
+        {{ product.title }}
+        {{ product.price }}
+        <a href="/add-to-cart" class="btn btn-primary">Add to cart</a>
         <i class="fas fa-shopping-cart ml-1"></i>
     {% endfor %}
 
