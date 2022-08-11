@@ -13,7 +13,7 @@
     <h3><a href="/{{product.id}}/product">Individual item</a></h3>
         {{ product.title }}
         {{ product.price }}
-        <a href="/add-to-cart" class="btn btn-primary">Add to cart</a>
+        <a href="/{{product.id}}/add-to-cart" class="btn btn-primary">Add to cart</a>
         <i class="fas fa-shopping-cart ml-1"></i>
     {% endfor %}
 

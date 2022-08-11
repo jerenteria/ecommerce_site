@@ -52,11 +52,13 @@ class Product(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    items = models.ManyToManyField(Product)
+    items_ordered = models.ManyToManyField(Product, related_name="orders")
     quantity = models.IntegerField()
+    total = models.IntegerField()
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
     
     def __str__(self):
         return self.title
+

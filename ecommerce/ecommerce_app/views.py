@@ -28,13 +28,14 @@ def home(request):
     return render(request, "index.html", context)
 
 
-def try_cart(request):
+def try_cart(request, product_id):
     if request.method=='POST':
-        item = Item.objects.get(id=item_id)
-        new_order = Order.objects.create(quantity=int(request.POST['quantity']), total_charge=int(request.POST['quantity'])*product.price)
-        new_order.items.add(items)
-        return redirect('/')
-    return redirect('/')
+        product = Product.objects.get(id=product_id)
+        new_order = Order.objects.create()
+        print("New order")
+        new_order.items_ordered.add(product)
+        return redirect('checkout')
+    return redirect('checkout')
 
 
 # def add_to_cart(request):
