@@ -21,9 +21,6 @@ class Product(models.Model):
     # slug = models.SlugField()
 
     
-    def __str__(self):
-        return self.title
-
     # slugs are used to store urls 
     # since spaced dont work in urls they are stored in slugs to prevent all the spaces
     # if i wanted to refer to my post with an id=2 then i can refer to it with www.ecommerce.com/2
@@ -54,11 +51,7 @@ class Order(models.Model):
     # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     items_ordered = models.ManyToManyField(Product, related_name="orders")
     quantity = models.IntegerField()
-    total = models.IntegerField()
-    start_date = models.DateTimeField(auto_now_add=True)
+    total = models.FloatField()
     ordered_date = models.DateTimeField()
-    ordered = models.BooleanField(default=False)
-    
-    def __str__(self):
-        return self.title
+
 
