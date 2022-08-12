@@ -28,14 +28,18 @@ def home(request):
     return render(request, "index.html", context)
 
 
-def try_cart(request, product_id):
-    if request.method=='POST':
-        product = Product.objects.get(id=product_id)
-        new_order = Order.objects.create()
-        print("New order")
-        new_order.items_ordered.add(product)
-        return redirect('checkout')
-    return redirect('checkout')
+def try_cart(request):
+    order = Order.objects.get(id=order_id)
+    new_order = Order.objects.create(
+        # user = request.POST['user'],
+        items_ordered = request.POST['items_ordered'],
+        quantity = request.POST['quantity'],
+        total = request.POST['total'],
+        start_date = request.POST['start_date'],
+        ordered_date = request.POST['ordered_date'],
+        ordered = request.POST['ordered'],
+        )
+    return render('/checkout')
 
 
 # def add_to_cart(request):
@@ -57,8 +61,8 @@ def try_cart(request, product_id):
 def checkout(request):
     return render(request, "cart.html")
 
-def one_item(request, item_id):
-    one_item = Item.objects.get(id=item_id)
+def one_item(request, product_id):
+    one_item = Product.objects.get(id=product_id)
     context = {
         'item': one_item
     }

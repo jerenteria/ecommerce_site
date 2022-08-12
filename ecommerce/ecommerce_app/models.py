@@ -51,7 +51,7 @@ class Product(models.Model):
 #         return f"{self.quantity} of {self.item.title}"
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     items_ordered = models.ManyToManyField(Product, related_name="orders")
     quantity = models.IntegerField()
     total = models.IntegerField()
