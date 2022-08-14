@@ -36,6 +36,18 @@ def try_cart(request, product_id):
         new_order.items_ordered.add(product)
     return redirect('/checkout')
 
+def render_total(request):
+    all_orders = Order.objects.all()
+    total_spent = 0
+    for order in all_orders:
+        total_spent += order.total
+    context = {
+        'last_order': Order.objects.last(),
+        'all_orders': all_orders,
+        'grand_total': total_spent,
+    }
+    return render(request, "cart.html", context)
+
 
 # def add_to_cart(request):
 #     # item = get_object_or_404(Item) #slug=slug) # check to see if user has item or not
