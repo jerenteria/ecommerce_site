@@ -52,6 +52,6 @@ class Order(models.Model):
     items_ordered = models.ManyToManyField(Product, related_name="orders")
     quantity = models.IntegerField()
     total = models.FloatField()
-    ordered_date = models.DateTimeField()
+    ordered_date = models.DateTimeField(null=True)
 
 

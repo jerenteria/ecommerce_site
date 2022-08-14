@@ -13,8 +13,17 @@
     <h3><a href="/{{product.id}}/product">Individual item</a></h3>
         {{ product.title }}
         {{ product.price }}
-        <a href="/{{product.id}}/add-to-cart" class="btn btn-primary">Add to cart</a>
-        <i class="fas fa-shopping-cart ml-1"></i>
+        <a href="/{{product.id}}/add-to-cart" method= "POST" class="btn btn-primary">Add to cart</a>
+
+        <form action="/{{product.id}}/add-to-cart" method="POST">
+            {% csrf_token %}
+            <select name="quantity">
+                {% for num in quantity %}
+                <option value="{{num}}">{{num}}</option>
+                {% endfor %}
+        </select>
+        <input type="submit" value="buy now!">
+        </form>
     {% endfor %}
 
 </body>
