@@ -6,8 +6,13 @@
     <title>Cart</title>
 </head>
 <body> 
-    
-    <p>total ${{all_orders.items}}</p>
-    You have purchased {{all_orders.count}} items and have spent a total of ${{grand_total}}
+    <h1>You made your purchase</h1>
+
+    <p>We charged your credit card for ${{last_order.total}}</p>
+
+    <form action="/pay" method="POST">
+        {% csrf_token %}
+        <button type="submit">PAY NOW!</button>
+    </form>
 </body>
 </html>
