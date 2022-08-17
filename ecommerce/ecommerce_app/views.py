@@ -102,3 +102,7 @@ def one_item(request, product_id):
         'item': one_item
     }
     return render(request, 'product.html', context)
+
+
+
+    
