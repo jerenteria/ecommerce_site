@@ -2,7 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from .models import *
-import stripe
+import stripe, os
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # renders all items
 # class based view is easier to create reusable components
@@ -22,7 +26,7 @@ import stripe
 #     template_name = "product.html"
 
 
-stripe.api_key = 'sk_test_51K2mNoIuO4V9XiaIb1QuwuZFfL66qeCCpOfmp8F0WzHV72gXpKTrcthFIVAXcXb374ox6OvMlZ2esP0YCJtHlj7c00MjtJnz1w'
+stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 def home(request):
     context = {
@@ -39,9 +43,6 @@ def try_cart(request, product_id):
         new_order.items_ordered.add(product)
     return redirect('/checkout') # renders wherever function checkout does
 
-# def charge(request):
-#     if request.method == 'POST':
-
 
 def checkout(request):
     all_orders = Order.objects.all()
@@ -54,6 +55,29 @@ def checkout(request):
         'grand_total': total_spent,
     }
     return render(request, "cart.html", context)
+
+
+def create_checkout_session():
+  session = stripe.checkout.Session.create(
+    line_items=[{
+      'price_data': {
+        'currency': 'usd',
+        'product_data': {
+          'title': 'shirt',
+          'title': 'sweater'
+        },
+        'unit_amount': 2000,
+      },
+      'quantity': 1,
+    }],
+    mode='payment',
+    success_url='http://127.0.0.1:8000/success',
+    cancel_url='/',
+  )
+  return redirect(session.url, code=303)
+
+def render_stripe(request):
+    return render(request, "payment.html")
 
 # def add_to_cart(request):
 #     # item = get_object_or_404(Item) #slug=slug) # check to see if user has item or not
