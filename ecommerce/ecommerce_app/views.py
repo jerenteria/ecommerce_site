@@ -77,23 +77,8 @@ def create_checkout_session():
   return redirect(session.url, code=303)
 
 def render_stripe(request):
-    return render(request, "payment.html")
+    return render(request, "payment.html")  
 
-# def add_to_cart(request):
-#     # item = get_object_or_404(Item) #slug=slug) # check to see if user has item or not
-#     order_item = OrderItem.objects.create(item=item)
-#     order_qs = Order.objects.filter(user=request.user, ordered=False)
-#     if order_qs.exists():
-#         order = order_qs[0]
-#         # check if order item is in the order
-#         if order.items.filter(item__id=item.id).exists():
-#             order_item.quantity += 1
-#             order_item.save()
-#     else:
-#         order_date = timezone.now()
-#         order = Order.objects.create(user=request.user, ordered_date=ordered_date)
-#         order.item.add(order_item)
-#     return redirect('/index')
 
 
 def one_item(request, product_id):
