@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from .models import *
 import stripe, os
+from flask import Flask, redirect, request
 
 from dotenv import load_dotenv
 
@@ -57,27 +58,33 @@ def checkout(request):
     return render(request, "cart.html", context)
 
 
-def create_checkout_session():
-  session = stripe.checkout.Session.create(
-    line_items=[{
-      'price_data': {
-        'currency': 'usd',
-        'product_data': {
-          'title': 'shirt',
-          'title': 'sweater'
-        },
-        'unit_amount': 2000,
-      },
-      'quantity': 1,
-    }],
-    mode='payment',
-    success_url='http://127.0.0.1:8000/success',
-    cancel_url='/',
-  )
-  return redirect(session.url, code=303)
+app = Flask(__name__,
+            static_url_path='',
+            static_folder='public')
+
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session(str):
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            line_items=[
+                {
+                    # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                    'price': 'price_1LXGBFIuO4V9XiaItcrmeK8S',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url='http://127.0.0.1:8000/success.html',
+            cancel_url='/'
+        )
+    except Exception as e:
+        return str(e)
+
+    return redirect(checkout_session.url, code=303)
+
 
 def render_stripe(request):
-    return render(request, "payment.html")  
+    return render(request, "payment.html")
 
 
 
