@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from .models import *
 import stripe, os
-from flask import Flask, redirect, request
+from flask import Flask, redirect, request, jsonify
 
 from dotenv import load_dotenv
 
@@ -80,7 +80,8 @@ def create_checkout_session(str):
     except Exception as e:
         return str(e)
 
-    return redirect(checkout_session.url, code=303)
+    return render(checkout_session.url, code=303)
+
 
 
 def render_stripe(request):
