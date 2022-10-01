@@ -12,41 +12,31 @@ def home(request):
     return render(request, "index.html")
 
 
+
 def checkout(request):
-    checkout_session = stripe.checkout.Session.create(
-        line_items=[
-            {
-                # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                'price': 'price_1LXGBFIuO4V9XiaItcrmeK8S',
-                'quantity': 1,
-            },
-        ],
-        mode='payment',
-        success_url='/',
-        cancel_url='/',
-    )
-    return redirect(checkout_session.url, code=303)
+  session = stripe.checkout.Session.create(
+    line_items=[{
+      'price_data': {
+        'currency': 'usd',
+        'product_data': {
+          'name': 'Sweater',
+        },
+        'unit_amount': 2999,
+      },
+      'quantity': 1,
+    }],
+    mode='payment',
+    success_url='http://127.0.0.1:8000/',
+    cancel_url='http://127.0.0.1:8000/',
+  )
+
+  return redirect(session.url, code=303)
 
 
+def success(request):
+    return redirect("success.html")
+
+def cancel(request):
+    return render("cancel.html")
 
 
-# def try_cart(request, product_id):
-#     if request.method=='POST':
-#         product = Product.objects.get(id=product_id)
-#         new_order = Order.objects.create(quantity=int(request.POST['quantity']), total=int(request.POST['quantity'])*product.price)
-#         new_order.items_ordered.add(product)
-#         print(product_id)
-#     return redirect('/checkout') # renders wherever function checkout does
-
-
-# def checkout(request):
-#     all_orders = Order.objects.all()
-#     total_spent = 0
-#     for order in all_orders:
-#         total_spent += order.total
-#     context = {
-#         'last_order': Order.objects.last(),
-#         'all_orders': all_orders,
-#         'grand_total': total_spent,
-#     }
-#     return render(request, "cart.html", context)
