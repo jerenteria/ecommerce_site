@@ -32,6 +32,25 @@ def checkout(request):
 
   return redirect(session.url, code=303)
 
+def checkout2(request):
+  session = stripe.checkout.Session.create(
+    line_items=[{
+      'price_data': {
+        'currency': 'usd',
+        'product_data': {
+          'name': 'Sweater',
+        },
+        'unit_amount': 2599,
+      },
+      'quantity': 1,
+    }],
+    mode='payment',
+    success_url='http://127.0.0.1:8000/',
+    cancel_url='http://127.0.0.1:8000/',
+  )
+
+  return redirect(session.url, code=303)
+
 
 def success(request):
     return redirect("success.html")
