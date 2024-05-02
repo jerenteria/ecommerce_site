@@ -20,5 +20,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("ecommerce_app.urls")),
     path('accounts/', include('allauth.urls')),
-    path('react/', include('rest_framework.urls')),
 ]

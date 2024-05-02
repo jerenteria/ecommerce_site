@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,13 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ecommerce_app',
 
-    'django.contrib.sites',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
-    'rest_framework',
-    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -69,7 +68,9 @@ ROOT_URLCONF = 'ecommerce.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'frontend/build')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -134,7 +135,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'frontend/build/static'
+    os.path.join(BASE_DIR, 'frontend/build/static'),
 ]
 
 # Default primary key field type
