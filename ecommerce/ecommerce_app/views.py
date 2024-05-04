@@ -8,6 +8,7 @@ load_dotenv()
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
+
 def home(request):
     return render(request, "index.html")
 
