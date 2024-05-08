@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *
 import stripe, os
+from django.http import JsonResponse
 
 from dotenv import load_dotenv
 
@@ -8,6 +9,11 @@ load_dotenv()
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
+
+def serialize_data(request):
+  data = Product.objects.all() # Query existing data
+  serialized_data = [{'id': obj.id, 'title': obj.title, 'price': obj.price} for obj in data]
+  return JsonResponse(serialize_data, safe=False)
 
 def home(request):
     return render(request, "index.html")
