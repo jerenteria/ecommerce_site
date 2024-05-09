@@ -8,5 +8,5 @@ urlpatterns = [
     path("checkout2", views.checkout2),
     path("success", views.success),
     path("cancel", views.cancel),
-    path("api/data", views.serialize_data),
+    path('api', views.serialize_data),
 ]

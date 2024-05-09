@@ -11,9 +11,9 @@ stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 
 def serialize_data(request):
-  data = Product.objects.all() # Query existing data
-  serialized_data = [{'id': obj.id, 'title': obj.title, 'price': obj.price} for obj in data]
-  return JsonResponse(serialize_data, safe=False)
+  data = Product.objects.all().values('id', 'title', 'price') # Query existing data
+  serialized_data = list(data)
+  return JsonResponse(serialized_data, safe=False)
 
 def home(request):
     return render(request, "index.html")

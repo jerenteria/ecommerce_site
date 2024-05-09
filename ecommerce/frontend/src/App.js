@@ -3,11 +3,21 @@ import React, { useState, useEffect } from "react";
 
 function App() {
   const [data, setData] = useState([]);
-    useEffect(() => {
-      fetch("http://localhost:8000/api/data")
-        .then((response) => response.json())
-        .then((data) => setData(data));
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const jsonData = await response.json();
+        setData(jsonData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
