@@ -24,7 +24,11 @@ function App() {
       <h1>Homepage</h1>
       <ul>
         {data.map((product) => (
-          <li key={product.id}>{product.title}</li>
+          <li key={product.id}>
+            {product.title}
+            {product.price}
+            <img src={product.item} />
+          </li>
         ))}
       </ul>
     </div>
