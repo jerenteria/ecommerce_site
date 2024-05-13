@@ -3,6 +3,9 @@ from .models import *
 import stripe, os
 from django.http import JsonResponse
 
+
+from django.conf import settings
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,7 +18,7 @@ def serialize_data(request):
   serialized_data = list(data)
   # Construct image URLs
   for item in serialized_data:
-    item['image'] = f'/ecommerce/ecommerce/ecommerce_app/static/images/{item["id"]}.jpeg'
+    item['image'] = settings.STATIC_URL + f'images/{item["id"]}.jpeg'
   return JsonResponse(serialized_data, safe=False)
 
 def home(request):
