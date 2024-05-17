@@ -7,7 +7,7 @@ from django.shortcuts import reverse
 class Product(models.Model):
     title = models.CharField(max_length=255)
     price = models.FloatField()
-    image = models.ImageField(upload_to='product.images', blank=True, null=True)
+    image = models.ImageField(upload_to='media', blank=True, null=True)
 
     def __str__(self):
         return self.title

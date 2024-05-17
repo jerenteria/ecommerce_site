@@ -12,6 +12,7 @@ function App() {
         }
         const jsonData = await response.json();
         setData(jsonData);
+        console.log(jsonData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -25,7 +26,7 @@ function App() {
       <ul>
         {data.map((product) => (
           <li key={product.id}>
-            <img src={product.image} alt={product.title} />
+            <img src={`http://localhost:8000${product.image}`} alt={product.title}  />
             <div>
               <h2>{product.title}</h2>
               <p>{product.price}</p>
