@@ -26,7 +26,8 @@ function App() {
       <ul>
         {data.map((product) => (
           <li key={product.id}>
-            <img src={product.image} alt={product.title}  />
+            {/* renders from media file; file is created from the updload_to path in models.py */}
+            <img src={`http://localhost:8000/media/${product.image}`} alt={product.title}  />
             <div>
               <h2>{product.title}</h2>
               <p>{product.price}</p>

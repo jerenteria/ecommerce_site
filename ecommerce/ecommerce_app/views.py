@@ -16,7 +16,6 @@ stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 def serialize_data(request):
   data = Product.objects.all().values('id', 'title', 'price', 'image') # Query existing data
   serialized_data = list(data)
-  # Construct image URLs
   return JsonResponse(serialized_data, safe=False)
 
 def home(request):
