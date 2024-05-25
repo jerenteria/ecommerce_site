@@ -1,5 +1,6 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
+import Header from "./components/Header";
 
 function App() {
   const [data, setData] = useState([]);
@@ -21,21 +22,26 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <h1>Homepage</h1>
-      <ul>
-        {data.map((product) => (
-          <li key={product.id}>
-            {/* renders from media file; file is created from the updload_to path in models.py */}
-            <img src={`http://localhost:8000/media/${product.image}`} alt={product.title}  />
-            <div>
-              <h2>{product.title}</h2>
-              <p>{product.price}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <>
+      <Header />
+      <div className="products">
+        <ul className="product-list">
+          {data.map((product) => (
+            <li key={product.id} className="product-item">
+              {/* renders from media file; file is created from the updload_to path in models.py */}
+              <img className="product-images"
+                src={`http://localhost:8000/media/${product.image}`}
+                alt={product.title}
+              />
+              <div>
+                <h2>{product.title}</h2>
+                <p>${product.price}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 }
 
