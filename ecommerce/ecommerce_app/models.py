@@ -14,6 +14,23 @@ class Product(models.Model):
         return self.title
 
 
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    checked_out = models.BooleanField(default=False)
+    products = models.ManyToManyField(Product, through="CartItem")
+
+    def add_product(self, product, quantity=1):
+        cart_item, created = CartItem.objects.get_or_create(cart=self, product=product)
+        if not created:
+            cart_item.quantity += quantity
+            cart_item.save()
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+
 class Order(models.Model):
     # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     items_ordered = models.ManyToManyField(Product, related_name="orders")

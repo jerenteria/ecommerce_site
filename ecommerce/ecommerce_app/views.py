@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 import stripe, os
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 from django.conf import settings
@@ -22,44 +23,103 @@ def home(request):
     return render(request, "index.html")
 
 
+@csrf_exempt
+def add_to_cart(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity', 1))
+        product = get_object_or_404(Product, id=product_id)
 
+        # Get the cart from the session, or create a new one if it doesn't exist
+        cart = request.session.get('cart', {})
+        if product_id in cart:
+            cart[product_id]['quantity'] += quantity
+        else:
+            cart[product_id] = {
+                'title': product.title,
+                'price': product.price,
+                'image': product.image.url if product.image else '',
+                'quantity': quantity,
+            }
+        request.session['cart'] = cart  # Save the cart back to the session
+
+        return JsonResponse({'status': 'success', 'message': 'Item added to cart'})
+
+@csrf_exempt
+def get_cart_items(request):
+    cart = request.session.get('cart', {})
+    cart_items = [{'product_id': k, **v} for k, v in cart.items()]
+    return JsonResponse(cart_items, safe=False)
+
+@csrf_exempt
 def checkout(request):
-  session = stripe.checkout.Session.create(
-    line_items=[{
-      'price_data': {
-        'currency': 'usd',
-        'product_data': {
-          'name': 'Sweater',
-        },
-        'unit_amount': 2999,
-      },
-      'quantity': 1,
-    }],
-    mode='payment',
-    success_url='http://127.0.0.1:8000/f',
-    cancel_url='http://127.0.0.1:8000/',
-  )
+    cart = request.session.get('cart', {})
+    if not cart:
+        return JsonResponse({'status': 'error', 'message': 'Cart is empty'})
 
-  return redirect(session.url, code=303)
+    line_items = []
+    for item in cart.values():
+        line_items.append({
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                    'name': item['title'],
+                },
+                'unit_amount': int(item['price'] * 100),  # Stripe expects amount in cents
+            },
+            'quantity': item['quantity'],
+        })
 
-def checkout2(request):
-  session = stripe.checkout.Session.create(
-    line_items=[{
-      'price_data': {
-        'currency': 'usd',
-        'product_data': {
-          'name': 'Sweater',
-        },
-        'unit_amount': 2599,
-      },
-      'quantity': 1,
-    }],
-    mode='payment',
-    success_url='http://127.0.0.1:8000/',
-    cancel_url='http://127.0.0.1:8000/',
-  )
+    session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=line_items,
+        mode='payment',
+        success_url='http://127.0.0.1:8000/success/',
+        cancel_url='http://127.0.0.1:8000/cancel/',
+    )
 
-  return redirect(session.url, code=303)
+    # Clear the cart
+    request.session['cart'] = {}
+
+    return JsonResponse({'url': session.url})
+
+# def checkout(request):
+#   session = stripe.checkout.Session.create(
+#     line_items=[{
+#       'price_data': {
+#         'currency': 'usd',
+#         'product_data': {
+#           'name': 'Sweater',
+#         },
+#         'unit_amount': 2999,
+#       },
+#       'quantity': 1,
+#     }],
+#     mode='payment',
+#     success_url='http://127.0.0.1:8000/f',
+#     cancel_url='http://127.0.0.1:8000/',
+#   )
+
+#   return redirect(session.url, code=303)
+
+# def checkout2(request):
+#   session = stripe.checkout.Session.create(
+#     line_items=[{
+#       'price_data': {
+#         'currency': 'usd',
+#         'product_data': {
+#           'name': 'Sweater',
+#         },
+#         'unit_amount': 2599,
+#       },
+#       'quantity': 1,
+#     }],
+#     mode='payment',
+#     success_url='http://127.0.0.1:8000/',
+#     cancel_url='http://127.0.0.1:8000/',
+#   )
+
+#   return redirect(session.url, code=303)
 
 
 def success(request):
