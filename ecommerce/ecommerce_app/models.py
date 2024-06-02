@@ -17,7 +17,7 @@ class Product(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     checked_out = models.BooleanField(default=False)
-    products = models.ManyToManyField(Product, through="CartItem")
+    products = models.ManyToManyField(Product, through="CartItem") # allow many users to add many products to cart
 
     def add_product(self, product, quantity=1):
         cart_item, created = CartItem.objects.get_or_create(cart=self, product=product)
