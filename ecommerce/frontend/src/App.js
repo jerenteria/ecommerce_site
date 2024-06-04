@@ -36,24 +36,24 @@ function App() {
   // in the backend but handling adding item to cart button in front end
   const addToCart = async (productId) => {
     try {
-      const csrftoken = getCookie("csrftoken");
-      const response = await fetch("http://localhost:8000/api/add_to_cart", {
-        method: "POST",
+      const csrftoken = getCookie('csrftoken');
+      const response = await fetch('http://localhost:8000/api/add_to_cart/', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken,
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken,
         },
         body: JSON.stringify({ product_id: productId, quantity: 1 }),
       });
       const result = await response.json();
-      if (result.status === "success") {
-        alert(result.message);
-        fetchCart(); // Update the cart data after adding an item
+      if (result.status === 'success') {
+        console.log("Added to cart");
+        fetchCart();
       } else {
-        alert("Error adding item to cart");
+        alert('Error adding item to cart');
       }
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      console.error('Error adding to cart:', error);
     }
   };
 

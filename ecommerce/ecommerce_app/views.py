@@ -3,6 +3,8 @@ from .models import *
 import stripe, os
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import json
+
 
 
 from django.conf import settings
@@ -26,24 +28,26 @@ def home(request):
 @csrf_exempt
 def add_to_cart(request):
     if request.method == 'POST':
-        product_id = request.POST.get('product_id')
-        quantity = int(request.POST.get('quantity', 1))
+        data = json.loads(request.body)
+        product_id = data.get('product_id')
+        quantity = data.get('quantity', 1)
         product = get_object_or_404(Product, id=product_id)
 
-        # Get the cart from the session, or create a new one if it doesn't exist
         cart = request.session.get('cart', {})
-        if product_id in cart:
-            cart[product_id]['quantity'] += quantity
+        if str(product_id) in cart:
+            cart[str(product_id)]['quantity'] += quantity
         else:
-            cart[product_id] = {
+            cart[str(product_id)] = {
                 'title': product.title,
                 'price': product.price,
                 'image': product.image.url if product.image else '',
                 'quantity': quantity,
             }
-        request.session['cart'] = cart  # Save the cart back to the session
+        request.session['cart'] = cart
 
         return JsonResponse({'status': 'success', 'message': 'Item added to cart'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 @csrf_exempt
 def get_cart_items(request):
