@@ -1,0 +1,12 @@
+#cart-button {
+    width: 100px;
+    background: gray;
+    border-radius: 20px;
+    box-shadow: 5px 10px 20px black;
+    transition: 0.5s;
+}
+
+#cart-button:hover {
+    background: white;
+    transform: translateY(-8px)
+}

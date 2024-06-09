@@ -3,10 +3,6 @@
   padding: 0;
 }
 
-body {
-  background: linear-gradient(to right, rgb(235, 235, 235), rgb(172, 167, 167), rgb(131, 130, 130), rgb(93, 92, 92));
-
-}
 
 .products {
   display: flex;

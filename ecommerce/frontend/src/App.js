@@ -57,25 +57,25 @@ function App() {
     }
   };
 
-  const checkout = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/api/checkout/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-      });
-      const result = await response.json();
-      if (result.url) {
-        window.location.href = result.url; // Redirect to Stripe checkout
-      } else {
-        alert("Error during checkout");
-      }
-    } catch (error) {
-      console.error("Error during checkout:", error);
-    }
-  };
+  // const checkout = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:8000/api/checkout/", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         "X-CSRFToken": getCookie("csrftoken"),
+  //       },
+  //     });
+  //     const result = await response.json();
+  //     if (result.url) {
+  //       window.location.href = result.url; // Redirect to Stripe checkout
+  //     } else {
+  //       alert("Error during checkout");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during checkout:", error);
+  //   }
+  // };
 
   const getCookie = (name) => {
     let cookieValue = null;
