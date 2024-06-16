@@ -35,3 +35,31 @@
 .product-info {
   padding: 10px;
 }
+
+.cart-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 1000;
+}
+
+.cart-modal h2 {
+  margin-top: 0;
+}
+
+.cart-modal ul {
+  list-style: none;
+  padding: 0;
+}
+
+.cart-modal li {
+  margin-bottom: 10px;
+}
+
+.cart-modal button {
+  margin-top: 20px;
+}

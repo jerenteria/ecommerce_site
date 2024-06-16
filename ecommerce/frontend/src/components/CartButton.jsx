@@ -1,13 +1,12 @@
 import CartIcon from "./CartIcon.jsx";
 import "./CartButton.css";
-import { useContext } from "react";
-import { CartContext } from "./CartContext.jsx";
+import React from "react";
 
-const CartButton = ({product}) => {
-
+const CartButton = ({ onClick }) => {
   return (
     <>
-      <button id="cart-button">
+      {/* uses the onClick function from the CartButton in Header.jsx */}
+      <button id="cart-button" onClick={onClick}>
         <CartIcon />
       </button>
     </>

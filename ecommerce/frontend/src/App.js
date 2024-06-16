@@ -1,6 +1,7 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
+import { CartProvider } from "./components/CartContext";
 
 function App() {
   const [data, setData] = useState([]);
@@ -24,7 +25,7 @@ function App() {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/get_cart_items");
+      const response = await fetch("http://localhost:8000/api/get_cart_items/");
       const cartData = await response.json();
       setCart(cartData);
     } catch (error) {
@@ -47,7 +48,7 @@ function App() {
       });
       const result = await response.json();
       if (result.status === 'success') {
-        console.log("Added to cart");
+        console.log('Added to cart');
         fetchCart();
       } else {
         alert('Error adding item to cart');
@@ -98,6 +99,7 @@ function App() {
 
   return (
     <>
+    <CartProvider>
       <Header />
       <div className="products">
         <ul className="product-list">
@@ -120,6 +122,7 @@ function App() {
           ))}
         </ul>
       </div>
+      </CartProvider>
     </>
   );
 }
