@@ -50,7 +50,7 @@ const Cart = () => {
       <div className="cart-total">
         <ul>
           {cart.map((product) => (
-            <li key={product.product_id}>
+            <li key={product.product.id}>
               {product.title} - ${product.price}
             </li>
           ))}

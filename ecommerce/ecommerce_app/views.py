@@ -4,8 +4,7 @@ import stripe, os
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-
-
+import logging
 
 from django.conf import settings
 
@@ -15,6 +14,8 @@ load_dotenv()
 
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
+
+logger = logging.getLogger(__name__)
 
 def serialize_data(request):
   data = Product.objects.all().values('id', 'title', 'price', 'image') # Query existing data
@@ -52,7 +53,9 @@ def add_to_cart(request):
 @csrf_exempt
 def get_cart_items(request):
     cart = request.session.get('cart', {})
+    logger.debug(f"Fetching items in cart: {cart}")
     cart_items = [{'product_id': k, **v} for k, v in cart.items()]
+    logger.debug(f"cart items to be returned: {cart_items}")
     return JsonResponse(cart_items, safe=False)
 
 @csrf_exempt
