@@ -3,6 +3,7 @@ from .models import *
 import stripe, os
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import never_cache
 import json
 import logging
 
@@ -15,7 +16,6 @@ load_dotenv()
 stripe.api_key = os.environ['STRIPE_SECRET_KEY']
 
 
-logger = logging.getLogger(__name__)
 
 def serialize_data(request):
   data = Product.objects.all().values('id', 'title', 'price', 'image') # Query existing data
@@ -27,14 +27,17 @@ def home(request):
 
 
 @csrf_exempt
+@never_cache
 def add_to_cart(request):
     if request.method == 'POST':
         data = json.loads(request.body)
+        print(f"Request data: {data}")
         product_id = data.get('product_id')
         quantity = data.get('quantity', 1)
         product = get_object_or_404(Product, id=product_id)
 
         cart = request.session.get('cart', {})
+        print(f"Cart before adding item: {cart}")
         if str(product_id) in cart:
             cart[str(product_id)]['quantity'] += quantity
         else:
@@ -45,6 +48,10 @@ def add_to_cart(request):
                 'quantity': quantity,
             }
         request.session['cart'] = cart
+        print(f"Cart after adding item: {cart}")
+
+        # Save the session explicitly if needed
+        request.session.modified = True
 
         return JsonResponse({'status': 'success', 'message': 'Item added to cart'})
 
@@ -53,9 +60,9 @@ def add_to_cart(request):
 @csrf_exempt
 def get_cart_items(request):
     cart = request.session.get('cart', {})
-    logger.debug(f"Fetching items in cart: {cart}")
+    print(f"Fetching items in cart: {cart}")
     cart_items = [{'product_id': k, **v} for k, v in cart.items()]
-    logger.debug(f"cart items to be returned: {cart_items}")
+    print(f"Cart items to be returned: {cart_items}")
     return JsonResponse(cart_items, safe=False)
 
 @csrf_exempt

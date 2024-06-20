@@ -12,6 +12,7 @@ export const CartProvider = ({ children }) => {
     try {
       const response = await fetch("http://localhost:8000/api/get_cart_items/");
       const cartData = await response.json();
+      console.log('Fetched cart data:', cartData);
       setCart(cartData);
     } catch (error) {
       console.error("Error fetching cart data:", error);
@@ -29,8 +30,10 @@ export const CartProvider = ({ children }) => {
         body: JSON.stringify({ product_id: productId, quantity: 1 }),
       });
       const result = await response.json();
+      console.log('Add to cart response', result);
       if (result.status === 'success') {
         console.log('Added to cart');
+        console.log(`Product ${productId} added to cart`);
         fetchCart();
       } else {
         alert('Error adding item to cart');

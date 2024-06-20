@@ -164,3 +164,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:3000",
 ]
+
+# Default session engine
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Using database to store session data
+
+# Other session settings
+SESSION_COOKIE_NAME = "sessionid"
+SESSION_COOKIE_SECURE = False  # Change to True in production
+SESSION_COOKIE_HTTPONLY = True
+SESSION_SAVE_EVERY_REQUEST = True  # Ensure the session is saved on every request

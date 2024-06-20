@@ -49,9 +49,9 @@ const Cart = () => {
     <>
       <div className="cart-total">
         <ul>
-          {cart.map((product) => (
-            <li key={product.product.id}>
-              {product.title} - ${product.price}
+          {cart.map((item) => (
+            <li key={item.id}>
+              {item.title} - ${item.price}
             </li>
           ))}
         </ul>
