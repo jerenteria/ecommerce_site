@@ -2,8 +2,8 @@ import "./Header.css";
 import "./CartIcon.jsx";
 import CartButton from "./CartButton.jsx";
 import React, { useState, useContext } from "react";
-import { CartContext } from "./CartContext";
 import Cart from "./Cart";
+import { CartContext } from './CartContext.jsx';
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

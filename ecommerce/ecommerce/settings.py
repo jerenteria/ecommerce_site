@@ -168,6 +168,9 @@ CORS_ALLOWED_ORIGINS = [
 # Default session engine
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Using database to store session data
 
+# Ensure the session data is saved after each request
+SESSION_SAVE_EVERY_REQUEST = True
+
 # Other session settings
 SESSION_COOKIE_NAME = "sessionid"
 SESSION_COOKIE_SECURE = False  # Change to True in production

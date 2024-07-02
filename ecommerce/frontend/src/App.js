@@ -23,23 +23,6 @@ function App() {
     fetchData();
   }, []);
 
-
-  const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === `${name}=`) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  };
-
-
   return (
     <>
       <CartProvider>
@@ -55,12 +38,14 @@ function App() {
                   alt={product.title}
                 />
                 <div>
-                  <h2>{product.title}</h2>
-                  <p>${product.price}</p>
-                  <button onClick={() => addToCart(product.id)}>
-                    Add To Cart
-                  </button>
-                </div>
+                <h2>{product.title}</h2>
+                <p>${product.price}</p>
+                <CartContext.Consumer>
+                  {({ addToCart }) => (
+                    <button onClick={() => addToCart(product.id)}>Add To Cart</button>
+                  )}
+                </CartContext.Consumer>
+              </div>
               </li>
             ))}
           </ul>
