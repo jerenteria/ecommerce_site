@@ -30,7 +30,7 @@ const Header = () => {
         <div className="cart-modal">
           <h2>Shopping Cart</h2>
           <Cart />
-          <button onClick={toggleModal}>Close</button>
+          <button id="close-button" onClick={toggleModal}>Close</button>
         </div>
       )}
     </>

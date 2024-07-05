@@ -41,6 +41,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // fetchCart is called inside useEffect() so that we only fetch the cart once we dont need to keep fetching the cart data
   useEffect(() => {
     fetchCart();
   }, []);

@@ -63,3 +63,22 @@
 .cart-modal button {
   margin-top: 20px;
 }
+
+.add-to-cart-button {
+  font-size: 25px;
+  padding: 4px;
+  border-radius: 11px;
+  border: none;
+  margin-top: 4px;
+  margin-bottom: 9px;
+  background: red;
+  color: white;
+  transition: 0.5s;
+  box-shadow: 5px 10px 10px black;
+}
+
+.add-to-cart-button:hover {
+  background: green;
+  color: white;
+  transform: translateY(-8px);
+}

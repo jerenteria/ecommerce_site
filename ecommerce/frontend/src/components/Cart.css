@@ -1,0 +1,27 @@
+.item-list {
+    font-size: 25px;
+    margin-top: 20px;
+}
+
+.cart-total {
+    font-size: 25px;
+}
+
+#actions {
+    display: inline-block;
+}
+
+#actions button {
+    font-size: 25px;
+    margin-right: 2px;
+    padding: 3px;
+    border-radius: 11px;
+    transition: 0.5s;
+    background: white;
+}
+
+#actions button:hover {
+    background: green;
+    color: white;
+    transform: translateY(-8px);
+}

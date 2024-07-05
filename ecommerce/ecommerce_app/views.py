@@ -65,8 +65,13 @@ def add_to_cart(request):
 
 @csrf_exempt
 def get_cart_items(request):
+    # get the "cart" stored in the session, if there is none then return an empty dictionary
     cart = request.session.get("cart", {})
     print(f"Fetching items in cart: {cart}")
+    # converts the cart dictionary into a list of dictionaries
+    # k is the "product_id", v is the dictionary of product details, it creates a new dictionary for each item
+    # adds product id as the key "product_id" and unpacking the other key-value pairs from 'v' into the new dictionary
+    # (iterates over each key-value pair in the cart dictionary )
     cart_items = [{"product_id": k, **v} for k, v in cart.items()]
     print(f"Cart items to be returned: {cart_items}")
     return JsonResponse(cart_items, safe=False)

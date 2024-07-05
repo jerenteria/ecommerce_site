@@ -42,7 +42,7 @@ function App() {
                 <p>${product.price}</p>
                 <CartContext.Consumer>
                   {({ addToCart }) => (
-                    <button onClick={() => addToCart(product.id)}>Add To Cart</button>
+                    <button className="add-to-cart-button" onClick={() => addToCart(product.id)}>Add To Cart</button>
                   )}
                 </CartContext.Consumer>
               </div>

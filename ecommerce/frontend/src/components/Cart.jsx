@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import "./CartContext.jsx";
 import { CartContext } from "./CartContext.jsx";
-
+import './Cart.css';
 
 const Cart = () => {
     const { cart } = useContext(CartContext);
@@ -33,7 +33,7 @@ const Cart = () => {
     return (
       <>
         <div className="cart-total">
-        <ul>
+        <ul className="item-list">
           {cart.map((item) => (
             <li key={item.product_id}>
               {item.title} - ${item.price} x {item.quantity}
@@ -43,7 +43,7 @@ const Cart = () => {
           <span>Total:</span>
           <span>${totalAmount.toFixed(2)}</span>
         </div>
-        <div className="actions">
+        <div id="actions">
           {cart.length > 0 && (
             <button id="order-button" onClick={checkout}>
               Order
