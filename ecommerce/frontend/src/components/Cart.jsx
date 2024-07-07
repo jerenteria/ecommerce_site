@@ -5,7 +5,7 @@ import './Cart.css';
 
 const Cart = () => {
     const { cart } = useContext(CartContext);
-  
+
     const checkout = async () => {
       try {
         const response = await fetch("http://localhost:8000/api/checkout/", {
@@ -13,15 +13,25 @@ const Cart = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({ cart }),
+          credentials: 'include',  // This is important for sending cookies
         });
+    
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    
         const result = await response.json();
         if (result.url) {
           window.location.href = result.url; // Redirect to Stripe checkout
+        } else if (result.error) {
+          alert(`Checkout error: ${result.error}`);
         } else {
-          alert("Error during checkout");
+          alert("Unexpected response from server");
         }
       } catch (error) {
         console.error("Error during checkout:", error);
+        alert(`Checkout failed: ${error.message}`);
       }
     };
   

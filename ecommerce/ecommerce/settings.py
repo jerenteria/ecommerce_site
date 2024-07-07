@@ -29,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -164,6 +165,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:3000",
 ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Default session engine
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Using database to store session data

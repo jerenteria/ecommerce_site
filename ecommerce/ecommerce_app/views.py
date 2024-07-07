@@ -79,78 +79,46 @@ def get_cart_items(request):
 
 @csrf_exempt
 def checkout(request):
-    cart = request.session.get("cart", {})
-    if not cart:
-        return JsonResponse({"status": "error", "message": "Cart is empty"})
+    try:
+        data = json.loads(request.body)
+        cart = data.get("cart", [])
+        if not cart:
+            return JsonResponse({"error": "Cart is empty"}, status=400)
 
-    line_items = []
-    for item in cart.values():
-        line_items.append(
-            {
-                "price_data": {
-                    "currency": "usd",
-                    "product_data": {
-                        "name": item["title"],
+        line_items = []
+        for item in cart:
+            line_items.append(
+                {
+                    "price_data": {
+                        "currency": "usd",
+                        "product_data": {
+                            "name": item["title"],
+                        },
+                        "unit_amount": int(item["price"] * 100),
                     },
-                    "unit_amount": int(
-                        item["price"] * 100
-                    ),  # Stripe expects amount in cents
-                },
-                "quantity": item["quantity"],
-            }
+                    "quantity": item["quantity"],
+                }
+            )
+
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=line_items,
+            mode="payment",
+            success_url="http://127.0.0.1:8000/success/",
+            cancel_url="http://127.0.0.1:8000/cancel/",
         )
 
-    session = stripe.checkout.Session.create(
-        payment_method_types=["card"],
-        line_items=line_items,
-        mode="payment",
-        success_url="http://127.0.0.1:8000/success/",
-        cancel_url="http://127.0.0.1:8000/cancel/",
-    )
+        return JsonResponse({"url": session.url})
 
-    # Clear the cart
-    request.session["cart"] = {}
-
-    return JsonResponse({"url": session.url})
-
-
-# def checkout(request):
-#   session = stripe.checkout.Session.create(
-#     line_items=[{
-#       'price_data': {
-#         'currency': 'usd',
-#         'product_data': {
-#           'name': 'Sweater',
-#         },
-#         'unit_amount': 2999,
-#       },
-#       'quantity': 1,
-#     }],
-#     mode='payment',
-#     success_url='http://127.0.0.1:8000/f',
-#     cancel_url='http://127.0.0.1:8000/',
-#   )
-
-#   return redirect(session.url, code=303)
-
-# def checkout2(request):
-#   session = stripe.checkout.Session.create(
-#     line_items=[{
-#       'price_data': {
-#         'currency': 'usd',
-#         'product_data': {
-#           'name': 'Sweater',
-#         },
-#         'unit_amount': 2599,
-#       },
-#       'quantity': 1,
-#     }],
-#     mode='payment',
-#     success_url='http://127.0.0.1:8000/',
-#     cancel_url='http://127.0.0.1:8000/',
-#   )
-
-#   return redirect(session.url, code=303)
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON in request body")
+        return JsonResponse({"error": "Invalid JSON in request body"}, status=400)
+    except stripe.error.StripeError as e:
+        logger.error(f"Stripe error: {str(e)}")
+        return JsonResponse({"error": str(e)}, status=400)
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return JsonResponse({"error": "An unexpected error occurred"}, status=500)
 
 
 def success(request):
