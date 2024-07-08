@@ -1,0 +1,9 @@
+.card {
+  border-radius: 12px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  opacity: 0.6;
+}

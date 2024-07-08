@@ -2,6 +2,7 @@ import "./App.css";
 import React, { useState, useEffect, useContext } from "react";
 import Header from "./components/Header";
 import { CartProvider, CartContext } from "./components/CartContext";
+import Card from './components/Card.jsx';
 
 function App() {
   const [data, setData] = useState([]);
@@ -31,6 +32,7 @@ function App() {
           <ul className="product-list">
             {data.map((product) => (
               <li key={product.id} className="product-item">
+                <Card>
                 {/* renders from media file; file is created from the updload_to path in models.py */}
                 <img
                   className="product-images"
@@ -46,6 +48,7 @@ function App() {
                   )}
                 </CartContext.Consumer>
               </div>
+              </Card>
               </li>
             ))}
           </ul>

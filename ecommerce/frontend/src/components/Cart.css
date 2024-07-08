@@ -25,3 +25,10 @@
     color: white;
     transform: translateY(-8px);
 }
+
+.remove-items-btn {
+    margin-left: 20px;
+    background: white;
+    color: red;
+    border: none;
+}

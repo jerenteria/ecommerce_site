@@ -42,6 +42,7 @@ def add_to_cart(request):
         print(f"Cart before adding item: {cart}")
         if str(product_id) in cart:
             cart[str(product_id)]["quantity"] += quantity
+            print(f"increased quantity for product {product_id}")
         else:
             cart[str(product_id)] = {
                 "title": product.title,
@@ -49,6 +50,7 @@ def add_to_cart(request):
                 "image": product.image.url if product.image else "",
                 "quantity": quantity,
             }
+            print(f"added new product {product_id} to cart")
         request.session["cart"] = cart
         request.session.modified = True  # Ensure the session is saved
         print(f"Cart after adding item: {cart}")
@@ -76,6 +78,43 @@ def get_cart_items(request):
     print(f"Cart items to be returned: {cart_items}")
     return JsonResponse(cart_items, safe=False)
 
+
+@csrf_exempt
+@never_cache
+def remove_from_cart(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print(f"Remove from cart request data: {data}")
+        product_id = str(data.get("product_id"))
+        quantity = data.get("quantity", 1)
+
+        cart = request.session.get("cart", {})
+        print(f"Cart before removing item: {cart}")
+
+        if product_id in cart:
+            if cart[product_id]["quantity"] <= quantity:
+                del cart[product_id]
+                print(f"Removed product {product_id} from cart")
+            else:
+                cart[product_id]["quantity"] -= quantity
+                print(f"Decreased quantity for product {product_id}")
+
+            request.session["cart"] = cart
+            request.session.modified = True  # Ensure the session is saved
+            print(f"Cart after removing item: {cart}")
+
+            cart_items = [{"product_id": k, **v} for k, v in cart.items()]
+            return JsonResponse(
+                {"status": "success", "message": "Item removed from cart", "cart": cart_items}
+            )
+        else:
+            return JsonResponse(
+                {"status": "error", "message": "Item not in cart"}, status=400
+            )
+
+    return JsonResponse(
+        {"status": "error", "message": "Invalid request method"}, status=400
+    )
 
 @csrf_exempt
 def checkout(request):

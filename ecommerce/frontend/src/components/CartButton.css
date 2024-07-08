@@ -1,6 +1,6 @@
 #cart-button {
     width: 100px;
-    background: gray;
+    background: red;
     border-radius: 20px;
     box-shadow: 5px 10px 20px black;
     transition: 0.5s;
@@ -9,4 +9,9 @@
 #cart-button:hover {
     background: white;
     transform: translateY(-8px)
+}
+
+#number-of-cart-items {
+    font-size: 22px;
+    color: white;
 }
