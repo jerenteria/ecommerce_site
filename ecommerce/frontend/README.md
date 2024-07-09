@@ -1,70 +1,32 @@
-# Getting Started with Create React App
+# Thanks for visiting ModernMonarch® 😃
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## What is ModernMonarch®?
+ModernMonarch is a website that i built where user can come in and buy clothes! I built this website using React as my frontend and Django for my backend.  
+I implemented an API using react to fetch data from my django backend by using **asynchronous functions.** Asynchronous functions do not return promises like  
+regular functions. They wait for something to happpen and then they execute. An example of an **asynchronous function** would be this:  
 
-## Available Scripts
 
-In the project directory, you can run:
+```javascript
+const fetchCart = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/get_cart_items/", {
+        credentials: "include",
+      });
+      const cartData = await response.json();
+      console.log("Fetched cart data:", cartData);
+      setCart(cartData);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+```
+In this example my frontend is talking to my backend using the URL above and asking it for the items that are being added from the backend. After my react component gets this information, then I would be able to render it to the user on the UI.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Challenges
+This project really helped me understand how frontend and backend communicate with eachother. Building this app was really fun but challenging.  
+After not building apps with Django in a long time I really had to go back and relearn the syntax. There was also things I didn't know how to do so I had to do a lot of research to get things working. 
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Some of those things that I really struggled with was deleting items from the cart one by one and adding serializers. I reasearched what serializers were and found that serializers are Django models that you are converting into JSON. If you do not do this then you cannot render anything in the front end. I had to learn this the hard way...
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+I was able to get a lot of help from **ChatGPT** and **Claude AI**. It's nice to be able to use these resources but you still need to understand the solution that its giving you. There was times where these tools would spit something out and I had no idea what the code was, so I had them break it down line by line. That helped me wrap my head around things such as the functions for removing items from the cart one by one.
