@@ -16,6 +16,7 @@ load_dotenv()
 stripe.api_key = os.environ["STRIPE_SECRET_KEY"]
 
 
+# serializes the data(turns django models into JSON so that the react front end can read it)
 def serialize_data(request):
     data = Product.objects.all().values(
         "id", "title", "price", "image"
@@ -28,21 +29,29 @@ def home(request):
     return render(request, "index.html")
 
 
-@csrf_exempt
-@never_cache
+@csrf_exempt # Exempts this view from CSRF protection. Used when you want to allow POST request without CSRF token
+@never_cache # prevents the view from being cached by the browser
 def add_to_cart(request):
     if request.method == "POST":
+        # Parces(breaks down) JSON data sent in the request body
         data = json.loads(request.body)
         print(f"Request data: {data}")
+        # Gets(extracts) the product_id
         product_id = data.get("product_id")
+        # Gets(extracts) quanitity from request data, if quantity is not provided it defaults to 1
         quantity = data.get("quantity", 1)
+        # Retreives(gets) object with the given product_id or returns error 404 not found
         product = get_object_or_404(Product, id=product_id)
 
+        # Gets the cart from the session, or initializes an empty dictionary if it doesn't exist
         cart = request.session.get("cart", {})
         print(f"Cart before adding item: {cart}")
+        # Check if the product is already in the cart using the product_id
         if str(product_id) in cart:
+            # Increase the quantity
             cart[str(product_id)]["quantity"] += quantity
             print(f"increased quantity for product {product_id}")
+        # If its not already in the cart then add it to the cart
         else:
             cart[str(product_id)] = {
                 "title": product.title,
@@ -51,15 +60,32 @@ def add_to_cart(request):
                 "quantity": quantity,
             }
             print(f"added new product {product_id} to cart")
+        # Update the cart in the session with all the items added    
         request.session["cart"] = cart
-        request.session.modified = True  # Ensure the session is saved
+        # Mark the session as modified
+        request.session.modified = True
         print(f"Cart after adding item: {cart}")
 
+        # Creates a list of cart items, each including its product_id
+
+        {"product_id": k, **v}: This creates a new dictionary for each item in the cart:
+
+
+        # {"product_id": k, **v}: This creates a new dictionary for each item in the cart
+        # "product_id": k adds a new key-value pair where the key is "product_id" and the value is the product ID (the key from the original cart dictionary).
+        # **v is the dictionary unpacking operator. It takes all the key-value pairs from the original product details dictionary (v) and includes them in this new dictionary.
+
+        # for k, v in cart.items(): This iterates over each key-value pair in the cart.
+        # Here, k represents the key (which is the product_id as a string), and v represents the value (which is a dictionary containing the product details).
+
+        # cart.items(): This method returns a view of the cart dictionary's key-value pairs as tuples.
         cart_items = [{"product_id": k, **v} for k, v in cart.items()]
+        # Returns a JSON response indicating successfully adding item to cart
         return JsonResponse(
             {"status": "success", "message": "Item added to cart", "cart": cart_items}
         )
 
+    # If the request method is not post then render an error message
     return JsonResponse(
         {"status": "error", "message": "Invalid request method"}, status=400
     )
