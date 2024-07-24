@@ -15,7 +15,7 @@ export const CartProvider = ({ children }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ product_id: productId, quantity: 1 }),
+        body: JSON.stringify({ product_id: productId, quantity: 1 }), // returns the json response as a string(productId, and the quanitity of 1)
         credentials: 'include', // tells the browser to include cookies which often contains session information(crucial for maintaining session state between frontend and backend)
       });
       const result = await response.json();
